@@ -6,5 +6,6 @@ public interface BookMenu {
 	int INSERT = 2;
 	int UPDATE = 3;
 	int DELETE = 4;
-	int EXIT = 5;
+	int SALARY_UP = 5; 
+	int EXIT = 6;
 }
