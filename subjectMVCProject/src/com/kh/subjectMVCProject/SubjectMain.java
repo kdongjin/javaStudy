@@ -143,7 +143,7 @@ public class SubjectMain {
 		}
 	}
 	//학생정보
-	private static void studentMenu() {
+	private static void studentMenu() throws SQLException {
 		int no;
 		StudentRegisterManager srm = new StudentRegisterManager(); 
 
@@ -152,7 +152,7 @@ public class SubjectMain {
 		switch (no) {
 		case STUDENT_CHOICE.INSERT:
 			System.out.println("");
-		//	srm.insertManager();
+			srm.insertManager();
 			break;
 		case STUDENT_CHOICE.UPDATE:
 			System.out.println("");

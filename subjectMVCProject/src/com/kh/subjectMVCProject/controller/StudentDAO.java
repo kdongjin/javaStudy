@@ -19,7 +19,8 @@ public class StudentDAO {
     public static final String STUDENT_UPDATE = "UPDATE STUDENT SET NAME = ?, KOR = ?, ENG = ?, MAT = ? WHERE NO = ?";
     public static final String STUDENT_DELETE = "DELETE FROM STUDENT WHERE NO = ?";
     public static final String STUDENT_SORT = "SELECT *FROM STUDENT ORDER BY RANK";
-	
+    public static final String STUDENT_ID_CHECK = "select COUNT(*) AS COUNT from student where id = ?";
+    public static final String STUDENT_NUM_COUNT ="select LPAD(count(*)+1,4,'0') as total_count from student where s_num = ?";
 	public static ArrayList<StudentVO> studentSelect() throws SQLException {
 		Connection con = null;
 		Statement stmt = null;
@@ -144,6 +145,35 @@ public class StudentDAO {
 
 		DBUtility.dbClose(con, stmt, rs);
 		return studentList; 
+	}
+
+	//중복아이디 체크
+	public boolean studentIdCheck(String id) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int count = 0; 
+
+		try {
+			con = DBUtility.dbCon();
+			pstmt = con.prepareStatement(STUDENT_ID_CHECK);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery(); 
+			if(rs.next()) {
+				count = rs.getInt("COUNT");
+			}
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		}
+
+		DBUtility.dbClose(con, pstmt, rs);
+		return (count != 0)?(true):(false);
+	}
+
+	//해당 학과번호 총갯수
+	public String getStudentCount(String s_num) {
+		
+		return null;
 	}
 
 }

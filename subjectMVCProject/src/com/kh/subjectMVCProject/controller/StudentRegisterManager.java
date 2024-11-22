@@ -1,9 +1,12 @@
 package com.kh.subjectMVCProject.controller;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 import com.kh.subjectMVCProject.model.StudentVO;
+import com.kh.subjectMVCProject.model.SubjectVO;
 
 
 public class StudentRegisterManager {
@@ -20,24 +23,62 @@ public class StudentRegisterManager {
 	}
 
 	public  void insertManager() throws SQLException {
-		// 3.statement
-		System.out.print("학생 이름을 입력하세요: ");
-		String name = sc.nextLine();
-		System.out.print("국어 점수를 입력하세요: ");
-		int kor = Integer.parseInt(sc.nextLine());
-		System.out.print("영어 점수를 입력하세요: ");
-		int eng = Integer.parseInt(sc.nextLine());
-		System.out.print("수학 점수를 입력하세요: ");
-		int mat = Integer.parseInt(sc.nextLine());
+		SubjectDAO subjectDao = new SubjectDAO();
+		StudentDAO studentDao = new StudentDAO();
+		StudentVO svo = new StudentVO();
 
-		StudentVO studentVO = new StudentVO();  
-		boolean successFlag = StudentDAO.studentInsert(studentVO);
+		System.out.println("학생 정보 입력");
+		System.out.print("성명 >>");
+		String name = sc.nextLine();
+		String id = null; 
+		do {
+			System.out.print("아이디(8자 이상 12자 이내) : ");
+			id = sc.nextLine();
+			boolean idCheck = studentDao.studentIdCheck(id);
+			if (idCheck == false) {
+				break; 
+			}
+			System.out.println("중복된 아이디입니다. 다시 입력하세요");
+		} while (true);
+
+		System.out.print("비밀번호(12자 이내) : ");
+		String passwd = sc.nextLine();
+
+		//학과정보출력
+		ArrayList<SubjectVO> subjectList = subjectDao.subjectSelect(); 
+		SubjectRegisterManager.printSubjectList(subjectList);
+
+		System.out.print("학과번호 : ");
+		String s_num = sc.nextLine();
+
+		// 학생 번호는 8자리로 생성한다. (연도2자리+학과2자리+일련번호 - 예로24110001) 
+		SimpleDateFormat sdf = new SimpleDateFormat("yy");
+		String year = sdf.format(new Date());
+		String num = year + s_num + studentDao.getStudentCount(s_num);
+		//String num = year + s_num + "0001";
+
+		System.out.print("생년월일(8자리: 19900829) : ");
+		String birthday = sc.nextLine();
+		System.out.print("전화번호 :010-2971-4011");
+		String phone = sc.nextLine();
+		System.out.print("도로명 주소 : ");
+		String address = sc.nextLine();
+		System.out.print("이메일   : ");
+		String email = sc.nextLine();
 		
-		if(successFlag == true) {
-			System.out.println("입력처리 성공");
-		}else {
+		StudentVO studentVO = new StudentVO(0, num, name, id, passwd, s_num, birthday, phone, address, email, null);
+		
+		boolean successFlag = studentDao.studentInsert(studentVO);
+
+		if(successFlag == false) {
 			System.out.println("입력처리 실패");
+			return; 
 		}
+
+		System.out.println();
+		System.out.println("등록 학생 정보");
+		studentDao.getStudentSelect(num); 
+		//sd.getStudent(svo.getSd_id(), svo.getSd_passwd());
 	}
 
 	public  void updateManager() throws SQLException {
