@@ -11,6 +11,10 @@ public class StudentRegisterManager {
 	public static void totalSelectManager() throws SQLException {
 		ArrayList<StudentVO> studentList = new ArrayList<StudentVO>();
 		studentList = StudentDAO.totalSelect();
+		if(studentList == null) {
+			System.out.println("데이터가 존재하지 않습니다.");
+			return;
+		}
 		printStudentList(studentList); 
 	}
 

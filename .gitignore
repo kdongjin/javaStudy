@@ -3,8 +3,9 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=java
 
 ### Java ###
-# Compiled class file
+# Compiled class file or Properties
 *.class
+*.properties
 
 # Log file
 *.log
