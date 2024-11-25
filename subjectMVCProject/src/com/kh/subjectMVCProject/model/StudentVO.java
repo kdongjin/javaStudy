@@ -124,9 +124,9 @@ public class StudentVO {
 
 	@Override
 	public String toString() {
-		return "[no=" + no + ", num=" + num + ", name=" + name + ", id=" + id + ", passwd=" + passwd + ", s_num="
-				+ s_num + ", birthday=" + birthday + ", phone=" + phone + ", address=" + address + ", email=" + email
-				+ ", sdate=" + sdate + "]";
+		return "[" + no + ", " + num + ", " + name + ", " + id + ", " + passwd + ", "
+				+ s_num + ", " + birthday + ", " + phone + ", " + address + ", " + email
+				+ ", " + sdate + "]";
 	}
 
 }

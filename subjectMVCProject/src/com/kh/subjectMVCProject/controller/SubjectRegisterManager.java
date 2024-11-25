@@ -31,8 +31,9 @@ public class SubjectRegisterManager {
 		subjectList = sd.subjectSelect();
 		if(subjectList == null) {
 			System.out.println("데이터가 존재하지 않습니다.");
+		}else {
+			printSubjectList(subjectList); 
 		}
-		printSubjectList(subjectList); 
 
 		System.out.println("학과 정보 입력(학과번호:01,02,03,04,05)학과명01(IT학과),02(정보학과), 03(보안), 04(프런트),05(백엔드)");
 		System.out.print("학과번호>>");

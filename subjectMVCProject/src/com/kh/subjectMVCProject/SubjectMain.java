@@ -164,11 +164,15 @@ public class SubjectMain {
 			break;
 		case STUDENT_CHOICE.LIST:
 			System.out.println("");
-//			studnetManager.studnetTotalList();
+			srm.selectManager();
 			break;
 		case STUDENT_CHOICE.DELETE:
 			System.out.println("");
 //			studnetManager.studnetTotalList();
+			break;
+		case STUDENT_CHOICE.LIST_ALL:
+			System.out.println("");
+			srm.selectAllManager();
 			break;
 		case STUDENT_CHOICE.MAIN:
 			return;
