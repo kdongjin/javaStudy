@@ -170,7 +170,7 @@ public class StudentDAO {
 		return (count != 0)?(true):(false);
 	}
 
-	//해당 학과번호 총갯수
+	//해당 학과번호 총갯수 11월 25일부터 시작
 	public String getStudentCount(String s_num) {
 		
 		return null;

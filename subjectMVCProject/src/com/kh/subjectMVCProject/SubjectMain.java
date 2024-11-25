@@ -126,7 +126,7 @@ public class SubjectMain {
 			break;
 		case SUBJECT_CHOICE.UPDATE:
 			System.out.println("");
-//			studnetManager.studnetUpdate();
+			srm.updateManager();
 			break;
 		case SUBJECT_CHOICE.LIST:
 			System.out.println("");
@@ -134,7 +134,11 @@ public class SubjectMain {
 			break;
 		case SUBJECT_CHOICE.DELETE:
 			System.out.println("");
-//			studnetManager.studnetTotalList();
+			srm.deleteManager();
+			break;
+		case SUBJECT_CHOICE.SORT:
+			System.out.println("");
+			srm.sortManager();
 			break;
 		case SUBJECT_CHOICE.MAIN:
 			return;

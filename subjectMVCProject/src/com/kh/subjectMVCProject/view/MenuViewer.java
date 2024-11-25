@@ -22,7 +22,8 @@ public class MenuViewer {
 		System.out.println("2. 학과 정보 입력");
 		System.out.println("3. 학과 정보 수정");
 		System.out.println("4. 학과 정보 삭제");
-		System.out.println("5. 메인 메뉴");
+		System.out.println("5. 학과 정보 정렬");
+		System.out.println("6. 메인 메뉴");
 		System.out.print("번호 선택 : ");
 	}
 

@@ -23,14 +23,16 @@ public class SubjectRegisterManager {
 
 	public static void insertManager() throws SQLException {
 		SubjectDAO sd = new SubjectDAO();
-		
-
+		ArrayList<SubjectVO> subjectList = null; 
 		String num; // 학과 번호
 		String name; // 학과명
 
 		System.out.println("학과 전체 리스트");
-		//sd.getSubjectTotalList();
-		System.out.println();
+		subjectList = sd.subjectSelect();
+		if(subjectList == null) {
+			System.out.println("데이터가 존재하지 않습니다.");
+		}
+		printSubjectList(subjectList); 
 
 		System.out.println("학과 정보 입력(학과번호:01,02,03,04,05)학과명01(IT학과),02(정보학과), 03(보안), 04(프런트),05(백엔드)");
 		System.out.print("학과번호>>");
@@ -47,7 +49,7 @@ public class SubjectRegisterManager {
 		}
 		System.out.println();
 		System.out.println("학과 전체 리스트");
-		ArrayList<SubjectVO> subjectList = sd.subjectSelect();
+		subjectList = sd.subjectSelect();
 		if(subjectList == null) {
 			System.out.println("학과정보가 없습니다.");
 			return;
@@ -56,33 +58,38 @@ public class SubjectRegisterManager {
 	}
 
 	public static void updateManager() throws SQLException {
-		System.out.print("수정할 학생의 번호를 입력하세요: ");
-		int no = Integer.parseInt(sc.nextLine());
-		System.out.print("새로운 이름을 입력하세요: ");
+		SubjectDAO sd = new SubjectDAO();
+		//전체학과리스트를 보여준다.
+		ArrayList<SubjectVO> subjectList = sd.subjectSelect();
+		if(subjectList == null) {
+			System.out.println("데이터가 존재하지 않습니다.");
+		}
+		printSubjectList(subjectList); 
+		//학과번호 , 수정할 학과 이름을 입력
+		System.out.print("수정할 학과의 번호를 입력하세요: ");
+		String num = (sc.nextLine()).trim();
+		System.out.print("수정할 학과 이름을 입력하세요: ");
 		String name = sc.nextLine();
-		System.out.print("새로운 국어 점수를 입력하세요: ");
-		int kor = Integer.parseInt(sc.nextLine());
-		System.out.print("새로운 영어 점수를 입력하세요: ");
-		int eng = Integer.parseInt(sc.nextLine());
-		System.out.print("새로운 수학 점수를 입력하세요: ");
-		int mat = Integer.parseInt(sc.nextLine());
 		
-		StudentVO svo = new StudentVO();
-		boolean successFlag = StudentDAO.studentUpdate(svo);
+		SubjectVO svo = new SubjectVO(num, name);
+		
+		boolean successFlag = sd.subjectUpdate(svo); 
 		
 		if(successFlag == true) {
-			System.out.println("입력처리 성공");
+			System.out.println("수정처리 성공");
 		}else {
-			System.out.println("입력처리 실패");
+			System.out.println("수정처리 실패");
 		}
 	}
 
 	public static void deleteManager() throws SQLException {
-		System.out.print("삭제할 학생 번호를 입력하세요: ");
-		int no = Integer.parseInt(sc.nextLine());
-		StudentVO svo = new StudentVO();
-		svo.setNo(no);
-		boolean successFlag = StudentDAO.studentDelete(svo); 
+		SubjectDAO sd = new SubjectDAO();
+		
+		System.out.print("삭제할 학과 번호를 입력하세요: ");
+		String num = (sc.nextLine()).trim();
+		SubjectVO svo = new SubjectVO();
+		svo.setNum(num);
+		boolean successFlag = sd.subjectDelete(svo);
 		
 		if(successFlag == true) {
 			System.out.println("삭제처리 성공");
@@ -92,9 +99,14 @@ public class SubjectRegisterManager {
 	}
 
 	public static void sortManager() throws SQLException {
-		ArrayList<StudentVO> studentList = null;
-		studentList =StudentDAO.studentSort(); 
-		//printSubjectList(subjectList); 
+		SubjectDAO sd = new SubjectDAO();
+		ArrayList<SubjectVO> subjectList = null;
+		subjectList = sd.subjectSort();
+		if(subjectList == null) {
+			System.out.println("데이터가 존재하지 않습니다.");
+			return;
+		}
+		printSubjectList(subjectList); 
 	}
 
 	//전체 학생리스트를 출력진행
