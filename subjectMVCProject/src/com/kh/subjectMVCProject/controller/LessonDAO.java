@@ -13,7 +13,7 @@ import com.kh.subjectMVCProject.model.StudentVO;
 public class LessonDAO {
 	public final String LESSON_SELECT = "select * from lesson"; 
 	public final String LESSON_SELECT_SORT = "select * from lesson ORDER BY NAME"; 
-	public final String LESSON_DELETE = "DELETE FROM LESSON WHERE NO = ? ";
+	public final String LESSON_DELETE = "delete from lesson where no = ?";
 	public final String LESSON_UPDATE = "UPDATE LESSON SET ABBRE = ?, NAME = ? WHERE NO = ? ";
 	public final String LESSON_INSERT = "INSERT INTO LESSON VALUES(lesson_seq.NEXTVAL, ?, ?) ";
 
@@ -73,23 +73,29 @@ public class LessonDAO {
 
 	// Lesson 테이블에서 delete 레코드를 삭제한다. (delete)
 	public boolean lessonDelete(LessonVO lvo) {
-		Connection con = null; 				//오라클접속관문
-		PreparedStatement pstmt = null; 	//오라클에서 작업할 쿼리문 사용할게 하는 명령문
-		boolean successFlag = false; 
-		
-		try {
-			con = DBUtility.dbCon(); 
-			pstmt = con.prepareStatement(LESSON_DELETE);
-			pstmt.setInt(1, lvo.getNo());
-			int count = pstmt.executeUpdate();
-			successFlag = (count != 0)?(true):(false); 
-		} catch (SQLException e) {
-			System.out.println(e.toString());
-		} finally {
-			DBUtility.dbClose(con, pstmt);
-		}
-		return successFlag ;
-	}
+        Connection con = null; // 오라클에 DB접속
+        PreparedStatement pstmt = null; // 오라클에서 작업할 쿼리문을 사용할 수 있게하는 명령문
+        boolean successFlag = false;
+        try {
+            con = DBUtility.dbCon();
+            System.out.println("LESSON_DELETE");
+            pstmt = con.prepareStatement(LESSON_DELETE);
+            pstmt.setInt(1, lvo.getNo());
+            System.out.println("LESSON_DELETE 2");
+            int count = pstmt.executeUpdate();
+            System.out.println("LESSON_DELETE 3"+ count);
+            
+            successFlag = (count != 0)? true : false;
+            
+        } catch (SQLException e) {
+            System.out.println(e.toString());
+        } finally {
+            DBUtility.dbClose(con, pstmt);
+        }
+
+        return successFlag;
+
+    }
 
 	// Lesson 테이블에서 update 레코드를 수정한다. (update)
 	public boolean lessonUpdate(LessonVO lvo) {

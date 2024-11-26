@@ -89,21 +89,25 @@ public class SubjectMain {
 		MenuViewer.lessonMenuView();
 		no = Integer.parseInt(sc.nextLine());
 		switch (no) {
+		case LESSON_CHOICE.LIST:
+			System.out.println("");
+			lrm.selectManager();
+			break;
 		case LESSON_CHOICE.INSERT:
 			System.out.println("");
-		//	srm.insertManager();
+			lrm.insertManager();
 			break;
 		case LESSON_CHOICE.UPDATE:
 			System.out.println("");
-//			studnetManager.studnetUpdate();
-			break;
-		case LESSON_CHOICE.LIST:
-			System.out.println("");
-//			studnetManager.studnetTotalList();
+			lrm.updateManager();
 			break;
 		case LESSON_CHOICE.DELETE:
 			System.out.println("");
-//			studnetManager.studnetTotalList();
+			lrm.deleteManager();
+			break;
+		case LESSON_CHOICE.SORT:
+			System.out.println("");
+			lrm.selectSortManager();
 			break;
 		case LESSON_CHOICE.MAIN:
 			return;
