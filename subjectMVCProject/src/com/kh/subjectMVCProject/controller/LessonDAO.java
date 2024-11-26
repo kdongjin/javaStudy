@@ -1,149 +1,138 @@
 package com.kh.subjectMVCProject.controller;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.kh.subjectMVCProject.model.LessonVO;
 import com.kh.subjectMVCProject.model.StudentVO;
 
-
+//자바에서 데이타베이스 접근해서 curd 전문적으로 담당하는 클래스
 public class LessonDAO {
+	public final String LESSON_SELECT = "select * from lesson"; 
+	public final String LESSON_SELECT_SORT = "select * from lesson ORDER BY NAME"; 
+	public final String LESSON_DELETE = "DELETE FROM LESSON WHERE NO = ? ";
+	public final String LESSON_UPDATE = "UPDATE LESSON SET ABBRE = ?, NAME = ? WHERE NO = ? ";
+	public final String LESSON_INSERT = "INSERT INTO LESSON VALUES(lesson_seq.NEXTVAL, ?, ?) ";
+
+	// Lesson 테이블에서 select 출력레코드를 리턴한다. (Read)
+	public ArrayList<LessonVO> lessonSelect(LessonVO lvo) {
+		Connection con = null; 				//오라클접속관문
+		PreparedStatement pstmt = null; 	//오라클에서 작업할 쿼리문 사용할게 하는 명령문
+		ResultSet rs = null;				//오라클에서 결과물을 받는객체
+		ArrayList<LessonVO> lessonList = new ArrayList<LessonVO>();	//결과값을 다른객체전달하기 위해서 사용하는객체
 		
-	public static final String LESSON_SELECT = "SELECT * FROM STUDENT";
-    public static final String LESSON_INSERT = "INSERT INTO STUDENT(NO, NAME, KOR, ENG, MAT) VALUES(STUDENT_NO_SEQ.NEXTVAL, ?, ?, ?, ?)";
-    public static final String LESSON_CALL_RANK_PROC = "{call STUDENT_RANK_PROC()}";
-    public static final String LESSON_UPDATE = "UPDATE STUDENT SET NAME = ?, KOR = ?, ENG = ?, MAT = ? WHERE NO = ?";
-    public static final String LESSON_DELETE = "DELETE FROM STUDENT WHERE NO = ?";
-    public static final String LESSON_SORT = "SELECT *FROM STUDENT ORDER BY RANK";
-	
-	public static ArrayList<StudentVO> studentSelect() throws SQLException {
-		Connection con = null;
-		Statement stmt = null;
-		ResultSet rs = null;
-		ArrayList<StudentVO> studentList = new ArrayList<StudentVO>();
-
-		con = DBUtility.dbCon();
-		stmt = con.createStatement();
-		rs = stmt.executeQuery(LESSON_SELECT);
-
-		if(rs.next()) {
-			do{
+		try {
+			con = DBUtility.dbCon(); 
+			pstmt = con.prepareStatement(LESSON_SELECT);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
 				int no = rs.getInt("NO");
+				String abbre = rs.getString("ABBRE");
 				String name = rs.getString("NAME");
-				int kor = rs.getInt("KOR");
-				int eng = rs.getInt("ENG");
-				int mat = rs.getInt("MAT");
-				int total = rs.getInt("TOTAL");
-				int ave = rs.getInt("AVE");
-				int rank = rs.getInt("RANK");
-
-				StudentVO stu = new StudentVO();
-				studentList.add(stu);
-			}while (rs.next());
-		}else {
-			studentList = null; 
+				LessonVO lessonVO = new LessonVO(no, abbre, name);
+				lessonList.add(lessonVO); 
+			}
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		} finally {
+			DBUtility.dbClose(con, pstmt, rs);
 		}
-		DBUtility.dbClose(con, stmt, rs);
-		return studentList;
+		
+		return lessonList;
 	}
 	
-	public static boolean studentInsert(StudentVO svo) throws SQLException {
-		// Conection
-		boolean successFlag = false; 
-		Connection con = null;
-		CallableStatement cstmt = null;
-		PreparedStatement pstmt = null;
-
-		// 1 Load, 2. connect
-		con = DBUtility.dbCon();
-
-		pstmt = con.prepareStatement(LESSON_INSERT);
-		pstmt.setString(1, svo.getName());
+	// Lesson 테이블에서 select 출력레코드를 리턴한다. (Read)
+	public ArrayList<LessonVO> lessonSelectSort(LessonVO lvo) {
+		Connection con = null; 				//오라클접속관문
+		PreparedStatement pstmt = null; 	//오라클에서 작업할 쿼리문 사용할게 하는 명령문
+		ResultSet rs = null;				//오라클에서 결과물을 받는객체
+		ArrayList<LessonVO> lessonList = new ArrayList<LessonVO>();	//결과값을 다른객체전달하기 위해서 사용하는객체
 		
-
-		int result1 = pstmt.executeUpdate();
-		System.out.println((result1 != 0) ? "입력성공" : "입력실패");
-
-		cstmt = con.prepareCall(LESSON_CALL_RANK_PROC);
-		int result2 = cstmt.executeUpdate();
-		System.out.println((result2 != 0) ? "프로시저성공" : "프로시저실패");
-
-		DBUtility.dbClose(con, pstmt, cstmt);
-		successFlag = (result1 != 0 && result2 != 0) ? true : false;
-		
-		return successFlag; 
-	}
-
-	public static boolean studentUpdate(StudentVO svo) throws SQLException {
-		boolean successFlag = false; 
-		Connection con = null;
-		CallableStatement cstmt = null;
-		PreparedStatement pstmt = null;
-
-		con = DBUtility.dbCon();
-		pstmt = con.prepareStatement(LESSON_UPDATE);
-		pstmt.setString(1, svo.getName());
-		
-
-		int result1 = pstmt.executeUpdate();
-		cstmt = con.prepareCall(LESSON_CALL_RANK_PROC);
-		int result2 = cstmt.executeUpdate();
-		
-		successFlag = (result1 != 0 && result2 != 0) ? true : false;
-
-		DBUtility.dbClose(con, pstmt, cstmt);
-		return successFlag; 
-	}
-
-	public static boolean studentDelete(StudentVO svo) throws SQLException {
-		boolean successFlag =false; 
-		Connection con = null;
-		PreparedStatement pstmt = null;
-
-		con = DBUtility.dbCon();
-		pstmt = con.prepareStatement(LESSON_DELETE);
-		pstmt.setInt(1, svo.getNo());
-		int result = pstmt.executeUpdate();
-		successFlag = (result != 0) ? true : false ;
-
-		DBUtility.dbClose(con, pstmt);
-		return successFlag; 
-	}
-
-	public static ArrayList<StudentVO> studentSort() throws SQLException {
-		Connection con = null;
-		Statement stmt = null;
-		ResultSet rs = null;
-		ArrayList<StudentVO> studentList = new ArrayList<StudentVO>();
-
-		con = DBUtility.dbCon();
-		stmt = con.createStatement();
-		rs = stmt.executeQuery(LESSON_SORT);
-
-		if(rs.next()) {
-			do {
+		try {
+			con = DBUtility.dbCon(); 
+			pstmt = con.prepareStatement(LESSON_SELECT_SORT);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
 				int no = rs.getInt("NO");
+				String abbre = rs.getString("ABBRE");
 				String name = rs.getString("NAME");
-				int kor = rs.getInt("KOR");
-				int eng = rs.getInt("ENG");
-				int mat = rs.getInt("MAT");
-				int total = rs.getInt("TOTAL");
-				int ave = rs.getInt("AVE");
-				int rank = rs.getInt("RANK");
-
-				StudentVO stu = new StudentVO();
-				studentList.add(stu);
-			} while (rs.next());
-		}else {
-			studentList = null; 
+				LessonVO lessonVO = new LessonVO(no, abbre, name);
+				lessonList.add(lessonVO); 
+			}
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		} finally {
+			DBUtility.dbClose(con, pstmt, rs);
 		}
-
-		DBUtility.dbClose(con, stmt, rs);
-		return studentList; 
+		
+		return lessonList;
 	}
 
+	// Lesson 테이블에서 delete 레코드를 삭제한다. (delete)
+	public boolean lessonDelete(LessonVO lvo) {
+		Connection con = null; 				//오라클접속관문
+		PreparedStatement pstmt = null; 	//오라클에서 작업할 쿼리문 사용할게 하는 명령문
+		boolean successFlag = false; 
+		
+		try {
+			con = DBUtility.dbCon(); 
+			pstmt = con.prepareStatement(LESSON_DELETE);
+			pstmt.setInt(1, lvo.getNo());
+			int count = pstmt.executeUpdate();
+			successFlag = (count != 0)?(true):(false); 
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		} finally {
+			DBUtility.dbClose(con, pstmt);
+		}
+		return successFlag ;
+	}
+
+	// Lesson 테이블에서 update 레코드를 수정한다. (update)
+	public boolean lessonUpdate(LessonVO lvo) {
+		Connection con = null; 				//오라클접속관문
+		PreparedStatement pstmt = null; 	//오라클에서 작업할 쿼리문 사용할게 하는 명령문
+		boolean successFlag = false; 
+		
+		try {
+			con = DBUtility.dbCon(); 
+			pstmt = con.prepareStatement(LESSON_UPDATE);
+			pstmt.setString(1, lvo.getAbbre());
+			pstmt.setString(2, lvo.getName()); 
+			pstmt.setInt(3, lvo.getNo());
+			
+			int count = pstmt.executeUpdate();
+			successFlag = (count != 0)?(true):(false); 
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		} finally {
+			DBUtility.dbClose(con, pstmt);
+		}
+		return successFlag ;
+	}
+
+	// Lesson 테이블에서 insert 레코드를 삽입한다. (insert)
+	public boolean lessonInsert(LessonVO lvo) {
+		Connection con = null; 				//오라클접속관문
+		PreparedStatement pstmt = null; 	//오라클에서 작업할 쿼리문 사용할게 하는 명령문
+		boolean successFlag = false; 
+		
+		try {
+			con = DBUtility.dbCon(); 
+			pstmt = con.prepareStatement(LESSON_INSERT);
+			pstmt.setString(1, lvo.getAbbre());
+			pstmt.setString(2, lvo.getName()); 
+
+			int count = pstmt.executeUpdate();
+			successFlag = (count != 0)?(true):(false); 
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		} finally {
+			DBUtility.dbClose(con, pstmt);
+		}
+		return successFlag ;
+	}
 }
