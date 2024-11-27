@@ -16,6 +16,7 @@ import com.kh.subjectMVCProject.model.StudentVO;
 public class StudentDAO {
 		
 	public static final String STUDENT_SELECT = "SELECT * FROM STUDENT";
+	public static final String STUDENT_SELECT_SEARCH = "SELECT NUM, NAME, EMAIL FROM STUDENT WHERE NAME = ?";
     public static final String STUDENT_INSERT = "insert into student values(student_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, sysdate)";
     public static final String STUDENT_CALL_RANK_PROC = "{call STUDENT_RANK_PROC()}";
     public static final String STUDENT_UPDATE = "UPDATE STUDENT SET NAME = ?, KOR = ?, ENG = ?, MAT = ? WHERE NO = ?";
@@ -61,7 +62,40 @@ public class StudentDAO {
 		}
 		return studentList;
 	}
-	
+
+    //이름검색
+    public static ArrayList<StudentVO> studentNameSelect(String nameValue) {
+		Connection con = null;
+		PreparedStatement pstmt = null; 
+		ResultSet rs = null;
+		ArrayList<StudentVO> studentList = new ArrayList<StudentVO>();
+		con = DBUtility.dbCon();
+		try {
+			pstmt = con.prepareStatement(STUDENT_SELECT_SEARCH);
+			pstmt.setString(1, nameValue);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				do{
+					String num = rs.getString("NUM");
+					String name = rs.getString("NAME");
+					String email = rs.getString("EMAIL");
+					StudentVO stu = new StudentVO();
+					stu.setNum(num);
+					stu.setName(name);
+					stu.setEmail(email);
+					studentList.add(stu);
+				}while (rs.next());
+			}else {
+				studentList = null; 
+			}
+		} catch (SQLException e) {
+			System.out.println(e.toString());
+		} finally {
+			DBUtility.dbClose(con, pstmt, rs);
+		}
+		return studentList;
+	}
+    
 	public static boolean studentInsert(StudentVO svo) {
 		// Conection
 		boolean successFlag = false; 

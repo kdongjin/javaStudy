@@ -15,10 +15,25 @@ public class StudentRegisterManager {
 
 	// 전체 학생리스트를 출력요청
 	public void selectManager() throws SQLException {
-		StudentDAO sdao = new StudentDAO(); 
+		StudentDAO sdao = new StudentDAO();
 		ArrayList<StudentVO> studentList = new ArrayList<StudentVO>();
-		
+
 		studentList = sdao.studentSelect();
+		if (studentList == null) {
+			System.out.println("데이터가 존재하지 않습니다.");
+			return;
+		}
+		printStudentList(studentList);
+	}
+
+	// 전체 학생리스트를 출력요청
+	public void selectNameSearchManager() {
+		StudentDAO sdao = new StudentDAO();
+		ArrayList<StudentVO> studentList = new ArrayList<StudentVO>();
+
+		System.out.print("(학생이름입력하세요)>>");
+		String name = sc.nextLine();
+		studentList = sdao.studentNameSelect(name); 
 		if (studentList == null) {
 			System.out.println("데이터가 존재하지 않습니다.");
 			return;
@@ -62,31 +77,31 @@ public class StudentRegisterManager {
 		// 학과번호입력
 		System.out.print("학과번호 : ");
 		String s_num = (sc.nextLine()).trim();
-		
+
 		// 학생 번호는 8자리로 생성한다. (연도2자리+학과2자리+일련번호 - 예로24110001)
 		SimpleDateFormat sdf = new SimpleDateFormat("yy");
 		String year = sdf.format(new Date());
 		svo.setS_num(s_num);
-		
+
 		String result = studentDao.getStudentCount(svo);
-		if(result == null) {
+		if (result == null) {
 			System.out.println("학생번호 생성부분에 문제가 발생했습니다.");
-			//return; 
+			// return;
 		}
 		System.out.println("학생번호 생성");
-		
+
 		// String num = year + s_num + "0001";
 		String num = year + s_num + result;
 
 		System.out.print("생년월일(8자리: 19900829) : ");
 		String birthday = sc.nextLine();
-		
+
 		System.out.print("전화번호 xxx-xxxx-xxxx :");
 		String phone = sc.nextLine();
-		
+
 		System.out.print("도로명 주소 : ");
 		String address = sc.nextLine();
-		
+
 		System.out.print("이메일   : ");
 		String email = sc.nextLine();
 
@@ -148,9 +163,9 @@ public class StudentRegisterManager {
 	}
 
 	public void selectAllManager() {
-		StudentDAO sdao = new StudentDAO(); 
+		StudentDAO sdao = new StudentDAO();
 		ArrayList<StudentAllVO> studentAllList = new ArrayList<StudentAllVO>();
-		
+
 		studentAllList = sdao.studentAllSelect();
 		if (studentAllList == null) {
 			System.out.println("데이터가 존재하지 않습니다.");
@@ -158,23 +173,27 @@ public class StudentRegisterManager {
 		}
 		printStudentList2(studentAllList);
 	}
+
 	public void printStudentList2(ArrayList<StudentAllVO> studentAllList) {
-		System.out.println("==============================================================================================");
+		System.out.println(
+				"==============================================================================================");
 		for (StudentAllVO sv : studentAllList) {
 			System.out.println(sv.toString());
 		}
-		System.out.println("===============================================================================================");
-		
+		System.out.println(
+				"===============================================================================================");
+
 	}
 
 	// 전체 학생리스트를 출력진행
 	public void printStudentList(ArrayList<StudentVO> studentList) {
-		System.out.println("==============================================================================================");
+		System.out.println(
+				"==============================================================================================");
 		for (StudentVO sv : studentList) {
 			System.out.println(sv.toString());
 		}
-		System.out.println("===============================================================================================");
+		System.out.println(
+				"===============================================================================================");
 	}
 
-	
 }

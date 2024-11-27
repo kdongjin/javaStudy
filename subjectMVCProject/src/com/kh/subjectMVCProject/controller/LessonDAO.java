@@ -78,23 +78,24 @@ public class LessonDAO {
         boolean successFlag = false;
         try {
             con = DBUtility.dbCon();
-            System.out.println("LESSON_DELETE");
+            con.setAutoCommit(false);
+            
             pstmt = con.prepareStatement(LESSON_DELETE);
             pstmt.setInt(1, lvo.getNo());
-            System.out.println("LESSON_DELETE 2");
             int count = pstmt.executeUpdate();
-            System.out.println("LESSON_DELETE 3"+ count);
-            
-            successFlag = (count != 0)? true : false;
-            
+            if(count != 0) {
+            	con.commit();
+            	successFlag = true; 
+            }else {
+            	con.rollback();
+            	successFlag = false; 
+            }
         } catch (SQLException e) {
             System.out.println(e.toString());
         } finally {
             DBUtility.dbClose(con, pstmt);
         }
-
         return successFlag;
-
     }
 
 	// Lesson 테이블에서 update 레코드를 수정한다. (update)

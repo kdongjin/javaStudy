@@ -60,19 +60,23 @@ public class SubjectMain {
 		switch (no) {
 		case TRAINEE_CHOICE.INSERT:
 			System.out.println("");
-		//	srm.insertManager();
+			trm.insertManager();
 			break;
 		case TRAINEE_CHOICE.UPDATE:
 			System.out.println("");
-//			studnetManager.studnetUpdate();
+			trm.updateManager();
 			break;
 		case TRAINEE_CHOICE.LIST:
 			System.out.println("");
-//			studnetManager.studnetTotalList();
+			trm.selectManager();
 			break;
 		case TRAINEE_CHOICE.DELETE:
 			System.out.println("");
-//			studnetManager.studnetTotalList();
+			trm.deleteManager();
+			break;
+		case TRAINEE_CHOICE.JOIN_LIST:
+			System.out.println("");
+			trm.totalSelectManager();
 			break;
 		case TRAINEE_CHOICE.MAIN:
 			return;

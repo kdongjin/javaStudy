@@ -61,7 +61,8 @@ public class MenuViewer {
 		System.out.println("2. 수강 신청 입력");
 		System.out.println("3. 수강 신청 수정");
 		System.out.println("4. 수강 신청 취소");
-		System.out.println("5. 메인 메뉴");
+		System.out.println("5. 수강 신청 조인 목록");
+		System.out.println("6. 메인 메뉴");
 		System.out.print("번호 선택 : ");
 	}
 }
