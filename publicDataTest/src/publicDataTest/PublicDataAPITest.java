@@ -11,6 +11,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.DriverManager;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,15 +22,53 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import publicDataTest.controller.LandPriceRegisterManager;
 import publicDataTest.model.LandPriceVO;
+import publicDataTest.view.LANDPRICE_CHOICE;
+import publicDataTest.view.MenuViewer;
 
 public class PublicDataAPITest {
-
+	public static Scanner sc = new Scanner(System.in); 
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
-		ArrayList<LandPriceVO> landPriceList = apiDataLoad();
-		printLandPriceList(landPriceList); 
-
+		int no;
+		boolean exitFlag = false; 
+		LandPriceRegisterManager lrm = new LandPriceRegisterManager(); 
+		while (!exitFlag) {
+			try {
+				MenuViewer.mainMenuView();
+				no = Integer.parseInt(sc.nextLine()); 
+				switch (no) {
+				case LANDPRICE_CHOICE.LOAD:
+					ArrayList<LandPriceVO> landPriceList = apiDataLoad();
+					printLandPriceList(landPriceList); 
+					break;
+				case LANDPRICE_CHOICE.INSERT:
+					lrm.insertManager();
+					break;
+				case LANDPRICE_CHOICE.SELECT:
+					lrm.selectManager();
+					break;
+				case LANDPRICE_CHOICE.DELETE:
+					lrm.deleteManager();
+					break;
+				case LANDPRICE_CHOICE.UPDATE:
+					lrm.updateManager();
+					break; 
+				case LANDPRICE_CHOICE.EXIT:
+					System.out.println("프로그램을 종료합니다.");
+					exitFlag = true; 
+					break; 
+				default:
+					System.out.println("해당 메뉴 번호만 입력하세요.");
+				}
+			} catch (Exception e) {
+				System.out.println("\n입력에 오류가 있습니다.\n프로그램을 다시 시작하세요.");
+			}
+			System.out.println("The End");
+			
+		}//end of file
+		
 	}// end of main
 
 	public static void printLandPriceList(ArrayList<LandPriceVO> landPriceList) {
@@ -119,7 +158,7 @@ public class PublicDataAPITest {
 						landPriceVO.setNodeno(Integer.parseInt(node.getTextContent()));
 						break;
 					}
-				}
+				}//end of for
 				landPriceList.add(landPriceVO);
 			}
 
